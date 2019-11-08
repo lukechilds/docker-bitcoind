@@ -1,7 +1,7 @@
 
 # docker-bitcoind
 
-[![Build Status](https://travis-ci.org/lukechilds/docker-bitcoind.svg?branch=master)](https://travis-ci.org/lukechilds/docker-bitcoind)
+[![Build Status](https://travis-ci.com/lukechilds/docker-bitcoind.svg?branch=master)](https://travis-ci.com/lukechilds/docker-bitcoind)
 [![Image Layers](https://images.microbadger.com/badges/image/lukechilds/bitcoind.svg)](https://microbadger.com/images/lukechilds/bitcoind)
 [![Docker Pulls](https://img.shields.io/docker/pulls/lukechilds/bitcoind.svg)](https://hub.docker.com/r/lukechilds/bitcoind/)
 
