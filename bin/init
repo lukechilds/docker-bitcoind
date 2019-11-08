@@ -1,0 +1,11 @@
+#!/bin/bash
+
+CONF=${DATA}/bitcoin.conf
+
+if [ ! -e "${CONF}" ]; then
+  echo "disablewallet=1
+printtoconsole=1
+rpcallowip=::/0" > "${CONF}"
+fi
+
+exec bitcoind -datadir=${DATA} -conf=${CONF} "$@"
