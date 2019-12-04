@@ -69,7 +69,7 @@ docker run -v /home/username/bitcoin:/data -p 8333:8333 lukechilds/bitcoind:v0.1
 
 ## Build
 
-You can build this image yourself by checking out this repo, `cd`ing into it and running:
+You can build this image yourself by checking out this repo, `cd` ing into it and running:
 
 ```
 docker build -t lukechilds/bitcoind .
