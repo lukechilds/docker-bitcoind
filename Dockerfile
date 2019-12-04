@@ -3,7 +3,6 @@ LABEL maintainer="Luke Childs <lukechilds123@gmail.com>"
 
 COPY ./bin /usr/local/bin
 COPY ./VERSION /tmp
-COPY ./CHECKSUM /tmp
 
 RUN VERSION=`cat /tmp/VERSION` && \
     TARBALL="bitcoin-${VERSION}-x86_64-linux-gnu.tar.gz" && \
@@ -12,7 +11,8 @@ RUN VERSION=`cat /tmp/VERSION` && \
     apt-get install -y curl && \
     cd /tmp && \
     curl -O https://bitcoin.org/bin/bitcoin-core-${VERSION}/${TARBALL} && \
-    echo "$(cat /tmp/CHECKSUM) $TARBALL" | sha256sum -c && \
+    curl -O https://bitcoin.org/bin/bitcoin-core-${VERSION}/SHA256SUMS.asc && \
+    grep $TARBALL SHA256SUMS.asc | sha256sum -c && \
     tar -zxvf $TARBALL && \
     mv bitcoin-${VERSION}/bin/* /usr/local/bin/ && \
     apt-get purge -y curl && \
