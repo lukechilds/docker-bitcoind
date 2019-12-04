@@ -1,4 +1,3 @@
-
 # docker-bitcoind
 
 [![Build Status](https://travis-ci.com/lukechilds/docker-bitcoind.svg?branch=master)](https://travis-ci.com/lukechilds/docker-bitcoind)
