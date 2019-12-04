@@ -63,7 +63,7 @@ Eric Young and UPnP software written by Thomas Bernard.
 You can also run a specific version of bitcoind if you want.
 
 ```
-docker run -v /home/username/bitcoin:/data -p 8333:8333 lukechilds/bitcoind:v0.11.1.0
+docker run -v /home/username/bitcoin:/data -p 8333:8333 lukechilds/bitcoind:v0.18.1
 ```
 
 ## Build
