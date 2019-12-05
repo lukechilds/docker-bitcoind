@@ -14,7 +14,8 @@ RUN cd /tmp && \
     gpg --verify SHA256SUMS.asc && \
     grep $TARBALL SHA256SUMS.asc | sha256sum -c && \
     tar -zxvf $TARBALL && \
-    mv bitcoin-${VERSION}/bin/* /usr/local/bin/ && \
+    mv bitcoin-${VERSION}/bin/bitcoind /usr/local/bin/ && \
+    mv bitcoin-${VERSION}/bin/bitcoin-cli /usr/local/bin/ && \
     apt-get purge -y curl gpg && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
