@@ -13,7 +13,8 @@ RUN VERSION=`cat /tmp/VERSION` && \
     curl -O https://bitcoin.org/bin/bitcoin-core-${VERSION}/${TARBALL} && \
     curl -O https://bitcoin.org/bin/bitcoin-core-${VERSION}/SHA256SUMS.asc && \
     KEY=01EA5486DE18A882D4C2684590C8019E36C2E964 && \
-    for keyserver in \                                                                                                         keyserver.ubuntu.com \
+    for keyserver in \
+        keyserver.ubuntu.com \
         pgp.mit.edu \
         keyserver.pgp.com \
         ha.pool.sks-keyservers.net \
