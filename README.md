@@ -19,7 +19,7 @@ If there's a `bitcoin.conf` in the `/data` volume it'll be used. If not, one wil
 
 ### JSON-RPC
 
-To query `bitcoind` to execute `bitcoin-cli` from within the container:
+To query `bitcoind`, execute `bitcoin-cli` from within the container:
 
 ```
 docker exec -it <container_name> bitcoin-cli getnetworkinfo
