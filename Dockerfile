@@ -27,10 +27,8 @@ RUN cd /tmp && \
     apt-get purge -y curl gpg && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-VOLUME ["/data"]
 ENV HOME /data
-ENV DATA /data
-WORKDIR /data
+VOLUME /data/.bitcoin
 
 EXPOSE 8332 8333
 
