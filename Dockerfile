@@ -1,15 +1,13 @@
 FROM debian:stable-slim
 LABEL maintainer="Luke Childs <lukechilds123@gmail.com>"
 
-COPY ./bin /usr/local/bin
 COPY ./VERSION /tmp
 
-RUN VERSION=`cat /tmp/VERSION` && \
+RUN cd /tmp && \
+    VERSION=`cat VERSION` && \
     TARBALL="bitcoin-${VERSION}-x86_64-linux-gnu.tar.gz" && \
-    chmod a+x /usr/local/bin/* && \
     apt-get update && \
     apt-get install -y curl gpg && \
-    cd /tmp && \
     curl -O https://bitcoin.org/bin/bitcoin-core-${VERSION}/${TARBALL} && \
     curl -O https://bitcoin.org/bin/bitcoin-core-${VERSION}/SHA256SUMS.asc && \
     KEY=01EA5486DE18A882D4C2684590C8019E36C2E964 && \
@@ -36,4 +34,4 @@ WORKDIR /data
 
 EXPOSE 8332 8333
 
-ENTRYPOINT ["init"]
+ENTRYPOINT ["bitcoind"]
