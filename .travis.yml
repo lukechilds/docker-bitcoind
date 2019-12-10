@@ -6,6 +6,8 @@ env:
   - VERSION=0.18.1
 script: >-
   docker build --build-arg VERSION=$VERSION -t lukechilds/bitcoind:v$VERSION . &&
+  echo &&
+  echo $ docker run lukechilds/bitcoind:v$VERSION -version &&
   (docker run lukechilds/bitcoind:v$VERSION -version | tee /dev/stderr | grep -q $VERSION) 2>&1
 notifications:
   email:
