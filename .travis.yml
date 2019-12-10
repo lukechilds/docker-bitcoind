@@ -7,7 +7,7 @@ env:
   - VERSION=0.18.0
   - VERSION=0.17.2
   - VERSION=0.17.1
-  - VERSION=0.17.0.1
+  # - VERSION=0.17.0.1 Disable for now as tarball path is broken https://twitter.com/lukechilds/status/1204280192283246592
   - VERSION=0.17.0
   - VERSION=0.16.3
   - VERSION=0.15.2
