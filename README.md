@@ -13,7 +13,7 @@ Bitcoin node.
 ## Usage
 
 ```
-docker run -v $HOME/.bitcoin:/data/.bitcoin -p 8333:8333 lukechilds/bitcoind
+docker --name bitcoind run -v $HOME/.bitcoin:/data/.bitcoin -p 8333:8333 lukechilds/bitcoind
 ```
 
 ### JSON-RPC
@@ -21,13 +21,13 @@ docker run -v $HOME/.bitcoin:/data/.bitcoin -p 8333:8333 lukechilds/bitcoind
 To query `bitcoind`, execute `bitcoin-cli` from within the container:
 
 ```
-docker exec -it <container_name> bitcoin-cli getnetworkinfo
+docker exec -it bitcoind bitcoin-cli getnetworkinfo
 ```
 
 To access JSON-RPC from other services you'll also need to expose port 8332. You probably only want this available to localhost:
 
 ```
-docker run -v $HOME/.bitcoin:/data/.bitcoin -p 8333:8333 -p 127.0.0.1:8332:8332 lukechilds/bitcoind
+docker --name bitcoind run -v $HOME/.bitcoin:/data/.bitcoin -p 8333:8333 -p 127.0.0.1:8332:8332 lukechilds/bitcoind
 ```
 
 ### CLI Arguments
@@ -37,7 +37,7 @@ All CLI arguments are passed directly through to bitcoind.
 You can use this to configure via CLI args without a config file:
 
 ```
-docker run -v $HOME/.bitcoin:/data/.bitcoin \
+docker --name bitcoind run -v $HOME/.bitcoin:/data/.bitcoin \
   -p 8333:8333 \
   -p 127.0.0.1:8332:8332 \
   lukechilds/bitcoind -rpcuser=jonsnow -rpcpassword=ikn0wnothin
@@ -68,7 +68,7 @@ Eric Young and UPnP software written by Thomas Bernard.
 You can also run a specific version of bitcoind if you want.
 
 ```
-docker run -v $HOME/.bitcoin:/data/.bitcoin -p 8333:8333 lukechilds/bitcoind:v0.18.1
+docker --name bitcoind run -v $HOME/.bitcoin:/data/.bitcoin -p 8333:8333 lukechilds/bitcoind:v0.18.1
 ```
 
 ## Build
