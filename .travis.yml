@@ -4,7 +4,9 @@ services:
 env:
   - VERSION=0.19.0.1
   - VERSION=0.18.1
-script: docker build --build-arg VERSION=$VERSION -t lukechilds/bitcoind:v$VERSION . && ( docker run lukechilds/bitcoind:v$VERSION -version | tee /dev/stderr | grep -q $VERSION ) 2>&1
+script: >-
+  docker build --build-arg VERSION=$VERSION -t lukechilds/bitcoind:v$VERSION . &&
+  (docker run lukechilds/bitcoind:v$VERSION -version | tee /dev/stderr | grep -q $VERSION) 2>&1
 notifications:
   email:
     on_success: never
