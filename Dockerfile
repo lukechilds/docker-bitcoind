@@ -7,8 +7,8 @@ RUN cd /tmp && \
     TARBALL="bitcoin-${VERSION}-x86_64-linux-gnu.tar.gz" && \
     apt-get update && \
     apt-get install -y curl gpg && \
-    curl --remote-name https://bitcoin.org/bin/bitcoin-core-${VERSION}/${TARBALL} && \
-    curl --remote-name https://bitcoin.org/bin/bitcoin-core-${VERSION}/SHA256SUMS.asc && \
+    curl --fail --remote-name https://bitcoin.org/bin/bitcoin-core-${VERSION}/${TARBALL} && \
+    curl --fail --remote-name https://bitcoin.org/bin/bitcoin-core-${VERSION}/SHA256SUMS.asc && \
     gpg --keyserver keyserver.ubuntu.com --recv-keys 01EA5486DE18A882D4C2684590C8019E36C2E964 && \
     gpg --verify SHA256SUMS.asc && \
     grep $TARBALL SHA256SUMS.asc | sha256sum -c && \
