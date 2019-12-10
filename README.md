@@ -65,7 +65,7 @@ Eric Young and UPnP software written by Thomas Bernard.
 
 ### Version
 
-You can also run a specific version of bitcoind if you want.
+Run a specific version of bitcoind if you want.
 
 ```
 docker --name bitcoind run -v $HOME/.bitcoin:/data/.bitcoin -p 8333:8333 lukechilds/bitcoind:v0.18.1
@@ -73,7 +73,7 @@ docker --name bitcoind run -v $HOME/.bitcoin:/data/.bitcoin -p 8333:8333 lukechi
 
 ## Build
 
-You can build this image yourself by checking out this repo, `cd` ing into it and running:
+Build this image yourself by checking out this repo, `cd` ing into it and running:
 
 ```
 docker build -t lukechilds/bitcoind .
