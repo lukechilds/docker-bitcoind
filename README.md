@@ -79,6 +79,12 @@ Build this image yourself by checking out this repo, `cd` ing into it and runnin
 docker build -t lukechilds/bitcoind .
 ```
 
+You can build a specific version by passing in the `VERSION` build arg:
+
+```
+docker build --build-arg VERSION=0.18.1 -t lukechilds/bitcoind:v0.18.1 .
+```
+
 ## License
 
 MIT © Luke Childs
