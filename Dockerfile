@@ -1,10 +1,9 @@
 FROM debian:stable-slim
 LABEL maintainer="Luke Childs <lukechilds123@gmail.com>"
 
-COPY ./VERSION /tmp
+ARG VERSION=0.19.0.1
 
 RUN cd /tmp && \
-    VERSION=`cat VERSION` && \
     TARBALL="bitcoin-${VERSION}-x86_64-linux-gnu.tar.gz" && \
     apt-get update && \
     apt-get install -y curl gpg && \
