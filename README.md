@@ -16,8 +16,6 @@ Bitcoin node.
 docker run -v $HOME/.bitcoin:/data/.bitcoin -p 8333:8333 lukechilds/bitcoind
 ```
 
-If there's a `bitcoin.conf` in the `/data` volume it'll be used. If not, one will be created for you with a randomly generated JSON-RPC password.
-
 ### JSON-RPC
 
 To query `bitcoind`, execute `bitcoin-cli` from within the container:
