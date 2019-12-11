@@ -1,13 +1,8 @@
 name: Docker Image CI
-
-on: [push]
-
+on: push
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         version:
@@ -24,10 +19,9 @@ jobs:
           - 0.13.2
           - 0.13.1
           - 0.13.0
-
     steps:
-    - uses: actions/checkout@v1
-    - name: Build the Docker image
-      run: docker build --build-arg VERSION=${{ matrix.version }} -t lukechilds/bitcoind:v${{ matrix.version }} .
-    - name: Check bitcoind version
-      run: (docker run lukechilds/bitcoind:v${{ matrix.version }} -version | tee /dev/stderr | grep -q ${{ matrix.version }}) 2>&1
+      - uses: actions/checkout@v1
+      - name: Build the Docker image
+        run: docker build --build-arg VERSION=${{ matrix.version }} -t lukechilds/bitcoind:v${{ matrix.version }} .
+      - name: Check bitcoind version
+        run: (docker run lukechilds/bitcoind:v${{ matrix.version }} -version | tee /dev/stderr | grep -q ${{ matrix.version }}) 2>&1
