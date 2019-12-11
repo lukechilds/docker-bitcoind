@@ -24,5 +24,7 @@ jobs:
       - uses: actions/checkout@v1
       - name: Build lukechilds/bitcoind
         run: docker build --build-arg VERSION=${{ matrix.version }} -t lukechilds/bitcoind:v${{ matrix.version }} .
+      - name: Log image data
+        run: docker images lukechilds/bitcoind
       - name: Check bitcoind -version
         run: (docker run lukechilds/bitcoind:v${{ matrix.version }} -version | tee /dev/stderr | grep -q ${{ matrix.version }}) 2>&1
