@@ -6,16 +6,16 @@ ARG VERSION=0.19.0.1
 RUN cd /tmp && \
     TARBALL="bitcoin-${VERSION}-x86_64-linux-gnu.tar.gz" && \
     apt-get update && \
-    apt-get install -y curl gpg && \
-    curl --fail --remote-name https://bitcoin.org/bin/bitcoin-core-${VERSION}/${TARBALL} && \
-    curl --fail --remote-name https://bitcoin.org/bin/bitcoin-core-${VERSION}/SHA256SUMS.asc && \
+    apt-get install -y wget gpg && \
+    wget https://bitcoin.org/bin/bitcoin-core-${VERSION}/${TARBALL} && \
+    wget https://bitcoin.org/bin/bitcoin-core-${VERSION}/SHA256SUMS.asc && \
     gpg --keyserver keyserver.ubuntu.com --recv-keys 01EA5486DE18A882D4C2684590C8019E36C2E964 && \
     gpg --verify SHA256SUMS.asc && \
     grep $TARBALL SHA256SUMS.asc | sha256sum -c && \
     tar -zxvf $TARBALL --strip-components=1 && \
     mv bin/bitcoind /usr/local/bin/ && \
     mv bin/bitcoin-cli /usr/local/bin/ && \
-    apt-get purge -y curl gpg && \
+    apt-get purge -y wget gpg && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ENV HOME /data
