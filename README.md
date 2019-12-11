@@ -6,8 +6,7 @@
 
 > Run a full Bitcoin node with one command
 
-A Docker configuration with sane defaults for running a full
-Bitcoin node.
+A Docker configuration with sane defaults for running a full Bitcoin node.
 
 ## Usage
 
