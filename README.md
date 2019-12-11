@@ -1,5 +1,6 @@
 # docker-bitcoind
 
+[![Actions Status](https://badgen.net/github/checks/lukechilds/docker-bitcoind?icon=github&label=Build%20Status)](https://github.com/lukechilds-docker-bitcoind/actions)
 [![Image Layers](https://images.microbadger.com/badges/image/lukechilds/bitcoind.svg)](https://microbadger.com/images/lukechilds/bitcoind)
 [![Docker Pulls](https://img.shields.io/docker/pulls/lukechilds/bitcoind.svg)](https://hub.docker.com/r/lukechilds/bitcoind/)
 [![tippin.me](https://badgen.net/badge/%E2%9A%A1%EF%B8%8Ftippin.me/@lukechilds/F0918E)](https://tippin.me/@lukechilds)
