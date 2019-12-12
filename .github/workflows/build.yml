@@ -38,7 +38,7 @@ jobs:
       - name: Check bitcoind -version
         run: (docker run bitcoind:v${{ matrix.version }}-${{ matrix.arch }} -version | tee /dev/stderr | grep -q ${{ matrix.version }}) 2>&1
       - name: Save built image into a .tgz file
-        run: mkdir -p images && docker save bitcoind:v${{ matrix.version }}-${{ matrix.arch }} | gzip > "images/bitcoind:v${{ matrix.version }}-${{ matrix.arch }}.tgz"
+        run: mkdir -p images && docker save bitcoind:v${{ matrix.version }}-${{ matrix.arch }} | gzip > "images/bitcoind-v${{ matrix.version }}-${{ matrix.arch }}.tgz"
       - name: Print sha256sum of built image
         run: sha256sum images/*
       - name: Upload built image
