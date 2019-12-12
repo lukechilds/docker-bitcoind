@@ -31,5 +31,7 @@ jobs:
         run: docker build --build-arg ARCH=${{ matrix.arch }} --build-arg VERSION=${{ matrix.version }} -t lukechilds/bitcoind:v${{ matrix.version }}-${{ matrix.arch }} .
       - name: Log image data
         run: docker images lukechilds/bitcoind
+      - name: Log OS details
+        run: docker run --entrypoint sh lukechilds/bitcoind:v${{ matrix.version }}-${{ matrix.arch }} '-c' 'uname -a && . /etc/os-release && echo $PRETTY_NAME'
       - name: Check bitcoind -version
         run: (docker run lukechilds/bitcoind:v${{ matrix.version }}-${{ matrix.arch }} -version | tee /dev/stderr | grep -q ${{ matrix.version }}) 2>&1
