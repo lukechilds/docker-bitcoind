@@ -1,10 +1,16 @@
-FROM debian:stable-slim
-LABEL maintainer="Luke Childs <lukechilds123@gmail.com>"
-
+ARG ARCH=amd64
 ARG VERSION=0.19.0.1
 
+FROM $ARCH/debian:stable-slim
+LABEL maintainer="Luke Childs <lukechilds123@gmail.com>"
+
+ARG ARCH
+ARG VERSION
+
 RUN cd /tmp && \
-    TARBALL="bitcoin-${VERSION}-x86_64-linux-gnu.tar.gz" && \
+    if [ "${ARCH}" = "amd64" ]; then export TARBALL_ARCH=x86_64; fi && \
+    if [ "${ARCH}" = "arm64v8" ]; then export TARBALL_ARCH=aarch64; fi && \
+    TARBALL="bitcoin-${VERSION}-${TARBALL_ARCH}-linux-gnu.tar.gz" && \
     apt-get update && \
     apt-get install -y wget gpg && \
     wget https://bitcoin.org/bin/bitcoin-core-${VERSION}/${TARBALL} && \
