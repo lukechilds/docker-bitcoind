@@ -6,6 +6,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        arch:
+          - amd64
+          - arm64v8
         version:
           - 0.19.0.1
           - 0.18.1
@@ -23,8 +26,8 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Build lukechilds/bitcoind
-        run: docker build --build-arg VERSION=${{ matrix.version }} -t lukechilds/bitcoind:v${{ matrix.version }} .
+        run: docker build --build-arg ARCH=${{ matrix.arch }} --build-arg VERSION=${{ matrix.version }} -t lukechilds/bitcoind:v${{ matrix.version }}-${{ matrix.arch }} .
       - name: Log image data
         run: docker images lukechilds/bitcoind
       - name: Check bitcoind -version
-        run: (docker run lukechilds/bitcoind:v${{ matrix.version }} -version | tee /dev/stderr | grep -q ${{ matrix.version }}) 2>&1
+        run: (docker run lukechilds/bitcoind:v${{ matrix.version }}-${{ matrix.arch }} -version | tee /dev/stderr | grep -q ${{ matrix.version }}) 2>&1
