@@ -24,7 +24,6 @@ jobs:
           # - 0.13.2
           # - 0.13.1
           # - 0.13.0
-    env:
     steps:
       - uses: actions/checkout@v1
       - name: Register Docker QEMU
