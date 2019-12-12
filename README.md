@@ -83,6 +83,14 @@ You can build a specific version by passing in the `VERSION` build arg:
 docker build --build-arg VERSION=0.18.1 -t lukechilds/bitcoind:v0.18.1 .
 ```
 
+You can build a specific architecture by passing in the `ARCH` build arg:
+
+```
+docker build --build-arg ARCH=amd64 -t lukechilds/bitcoind:v0.18.1 .
+```
+
+For a full list of supported build arg options, check out the [build script matrix](https://github.com/lukechilds/docker-bitcoind/blob/master/.github/workflows/build.yml).
+
 ## License
 
 MIT © Luke Childs
