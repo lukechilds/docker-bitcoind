@@ -47,3 +47,13 @@ jobs:
         with:
           name: images
           path: images/
+  push:
+    runs-on: ubuntu-18.04
+    needs: build
+    steps:
+      - name: Download all images
+        uses: actions/download-artifact@v1.0.0
+        with:
+          name: images
+      - name: Print sha256sum of all images
+        run: sha256sum images/*
