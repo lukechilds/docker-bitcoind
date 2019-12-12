@@ -25,13 +25,17 @@ docker exec -it bitcoind bitcoin-cli getnetworkinfo
 To access JSON-RPC from other services you'll also need to expose port 8332. You probably only want this available to localhost:
 
 ```
-docker --name bitcoind run -v $HOME/.bitcoin:/data/.bitcoin -p 8333:8333 -p 127.0.0.1:8332:8332 lukechilds/bitcoind
+docker --name bitcoind run -v $HOME/.bitcoin:/data/.bitcoin \
+  -p 8333:8333 \
+  -p 127.0.0.1:8332:8332 \
+  lukechilds/bitcoind
 ```
 
 You could now query JSON-RPC via cURL like so:
 
 ```
-curl --data '{"jsonrpc":"1.0","id":"curltext","method":"getnetworkinfo"}' http://$(cat $HOME/.bitcoin/.cookie)@127.0.0.1:8332
+curl --data '{"jsonrpc":"1.0","id":"curltext","method":"getnetworkinfo"}' \
+  http://$(cat $HOME/.bitcoin/.cookie)@127.0.0.1:8332
 ```
 
 ### CLI Arguments
