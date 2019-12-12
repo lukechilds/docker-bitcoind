@@ -25,21 +25,20 @@ jobs:
           # - 0.13.1
           # - 0.13.0
     env:
-      DOCKER_IMAGE: bitcoind:v${{ matrix.version }}-${{ matrix.arch }}
     steps:
       - uses: actions/checkout@v1
       - name: Register Docker QEMU
         run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
       - name: Build bitcoind
-        run: docker build --build-arg ARCH=${{ matrix.arch }} --build-arg VERSION=${{ matrix.version }} -t $DOCKER_IMAGE .
+        run: docker build --build-arg ARCH=${{ matrix.arch }} --build-arg VERSION=${{ matrix.version }} -t bitcoind:v${{ matrix.version }}-${{ matrix.arch }} .
       - name: Log image data
         run: docker images bitcoind
       - name: Log OS details
-        run: docker run --entrypoint sh $DOCKER_IMAGE '-c' 'uname -a && . /etc/os-release && echo $PRETTY_NAME'
+        run: docker run --entrypoint sh bitcoind:v${{ matrix.version }}-${{ matrix.arch }} '-c' 'uname -a && . /etc/os-release && echo $PRETTY_NAME'
       - name: Check bitcoind -version
-        run: (docker run $DOCKER_IMAGE -version | tee /dev/stderr | grep -q ${{ matrix.version }}) 2>&1
+        run: (docker run bitcoind:v${{ matrix.version }}-${{ matrix.arch }} -version | tee /dev/stderr | grep -q ${{ matrix.version }}) 2>&1
       - name: Save built image into a .tgz file
-        run: mkdir -p images && docker save $DOCKER_IMAGE | gzip > "images/${DOCKER_IMAGE}.tgz"
+        run: mkdir -p images && docker save bitcoind:v${{ matrix.version }}-${{ matrix.arch }} | gzip > "images/bitcoind:v${{ matrix.version }}-${{ matrix.arch }}.tgz"
       - name: Print sha256sum of built image
         run: sha256sum images/*
       - name: Upload built image
