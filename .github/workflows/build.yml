@@ -38,3 +38,12 @@ jobs:
         run: docker run --entrypoint sh lukechilds/bitcoind:$DOCKER_TAG '-c' 'uname -a && . /etc/os-release && echo $PRETTY_NAME'
       - name: Check bitcoind -version
         run: (docker run lukechilds/bitcoind:$DOCKER_TAG -version | tee /dev/stderr | grep -q ${{ matrix.version }}) 2>&1
+      - name: Save built image into a .tgz file
+        run: mkdir -p images && docker save lukechilds/bitcoind:$DOCKER_TAG | gzip > "images/bitcoind:$DOCKER_TAG.tgz"
+      - name: Print sha256sum of built image
+        run: sha256sum images/*
+      - name: Upload built image
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          name: images
+          path: images
