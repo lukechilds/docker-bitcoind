@@ -8,9 +8,10 @@ ARG ARCH
 ARG VERSION
 
 RUN cd /tmp && \
-    if [ "${ARCH}" = "amd64" ]; then export TARBALL_ARCH=x86_64; fi && \
-    if [ "${ARCH}" = "arm64v8" ]; then export TARBALL_ARCH=aarch64; fi && \
-    TARBALL="bitcoin-${VERSION}-${TARBALL_ARCH}-linux-gnu.tar.gz" && \
+    if [ "${ARCH}" = "amd64" ]; then export TARBALL_ARCH=x86_64-linux-gnu; fi && \
+    if [ "${ARCH}" = "arm64v8" ]; then export TARBALL_ARCH=aarch64-linux-gnu; fi && \
+    if [ "${ARCH}" = "arm32v7" ]; then export TARBALL_ARCH=arm-linux-gnueabihf; fi && \
+    TARBALL="bitcoin-${VERSION}-${TARBALL_ARCH}.tar.gz" && \
     apt-get update && \
     apt-get install -y wget gpg && \
     wget https://bitcoin.org/bin/bitcoin-core-${VERSION}/${TARBALL} && \
