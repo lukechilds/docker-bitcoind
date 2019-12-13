@@ -1,10 +1,11 @@
-name: Build Docker Image
+name: Docker CI
 on: push
 env:
   DOCKER_BUILDKIT: 1
   LATEST_TAG: 0.19.0.1
 jobs:
   build:
+    name: Build
     runs-on: ubuntu-18.04
     strategy:
       fail-fast: false
@@ -49,7 +50,8 @@ jobs:
         with:
           name: images
           path: images/
-  push:
+  publish:
+    name: Publish
     runs-on: ubuntu-18.04
     needs: build
     steps:
