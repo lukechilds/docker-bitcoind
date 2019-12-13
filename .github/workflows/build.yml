@@ -65,7 +65,7 @@ jobs:
         run: echo "${{secrets.DOCKER_TOKEN}}" | docker login -u=lukechilds --password-stdin
       - name: Push to Docker Hub
         run: docker push lukechilds/bitcoind
-      - name: Create multi-arch manifest
+      - name: Create and push multi-arch manifests
         env:
           DOCKER_CLI_EXPERIMENTAL: enabled # To enable manifests
         run: |
