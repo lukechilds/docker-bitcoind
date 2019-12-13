@@ -36,11 +36,11 @@ jobs:
         run: docker run --entrypoint sh bitcoind:v${{ matrix.version }}-${{ matrix.arch }} '-c' 'uname -a && . /etc/os-release && echo $PRETTY_NAME'
       - name: Check bitcoind -version
         run: (docker run bitcoind:v${{ matrix.version }}-${{ matrix.arch }} -version | tee /dev/stderr | grep -q ${{ matrix.version }}) 2>&1
-      - name: Save built image into a .tgz file
+      - name: Save image tarballs
         run: mkdir -p images && docker save bitcoind:v${{ matrix.version }}-${{ matrix.arch }} | gzip > "images/bitcoind-v${{ matrix.version }}-${{ matrix.arch }}.tgz"
       - name: Print sha256sum of built image
         run: sha256sum images/*
-      - name: Upload built image
+      - name: Upload image tarballs
         uses: actions/upload-artifact@v1.0.0
         with:
           name: images
@@ -49,9 +49,13 @@ jobs:
     runs-on: ubuntu-18.04
     needs: build
     steps:
-      - name: Download all images
+      - name: Download image tarballs
         uses: actions/download-artifact@v1.0.0
         with:
           name: images
       - name: Print sha256sum of all images
         run: sha256sum images/*
+      - name: Load image tarballs
+        run: for image in images/*; do docker load -i $image; done
+      - name: Log image data
+        run: docker images bitcoind
