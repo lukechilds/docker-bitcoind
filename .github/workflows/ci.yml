@@ -78,7 +78,7 @@ jobs:
           versions=$(docker images lukechilds/bitcoind --format "{{.Tag}}" | grep amd64 | cut -d- -f1)
           for version in $versions; do
             tags=$(docker images lukechilds/bitcoind --format "{{.Tag}}" | grep $version- | sed 's/^/lukechilds\/bitcoind\:&/')
-            if [[ $version = $LATEST_TAG ]]; then
+            if [[ "${version}" = "v${LATEST_TAG}" ]]; then
               docker manifest create lukechilds/bitcoind:latest $tags
               docker manifest push lukechilds/bitcoind:latest
             fi
