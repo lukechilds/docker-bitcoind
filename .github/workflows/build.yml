@@ -65,3 +65,15 @@ jobs:
         run: echo "${{secrets.DOCKER_TOKEN}}" | docker login -u=lukechilds --password-stdin
       - name: Push to Docker Hub
         run: docker push lukechilds/bitcoind
+      - name: Create multi-arch manifest
+        env:
+          DOCKER_CLI_EXPERIMENTAL: enabled # To enable manifests
+        run: |
+          versions=$(docker images lukechilds/bitcoind --format "{{.Tag}}" | grep amd64 | cut -d- -f1)
+          for version in $versions; do
+            tags=$(docker images lukechilds/bitcoind --format "{{.Tag}}" | grep $version- | sed 's/^/lukechilds\/bitcoind\:&/')
+            docker manifest create "lukechilds/bitcoind:${version}" $tags
+            docker manifest push "lukechilds/bitcoind:${version}"
+            docker manifest inspect "lukechilds/bitcoind:${version}"
+            echo
+          done
