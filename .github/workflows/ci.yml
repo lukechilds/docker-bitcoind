@@ -52,7 +52,7 @@ jobs:
           path: images/
   publish:
     name: Publish
-    if: github.ref = 'master'
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-18.04
     needs: build
     steps:
