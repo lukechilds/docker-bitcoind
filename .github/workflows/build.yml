@@ -57,5 +57,7 @@ jobs:
         run: sha256sum images/*
       - name: Load image tarballs
         run: for image in images/*; do docker load -i $image; done
+      - name: Set image namespace
+        run: docker images bitcoind --format "{{.Tag}}" | while read -r tag; do docker tag  "bitcoind:${tag}"  "lukechilds/bitcoind:${tag}"; done
       - name: Log image data
-        run: docker images bitcoind
+        run: docker images lukechilds/bitcoind
