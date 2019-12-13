@@ -3,7 +3,9 @@
 [![Actions Status](https://badgen.net/github/checks/lukechilds/docker-bitcoind?icon=github&label=Build%20Status)](https://github.com/lukechilds/docker-bitcoind/actions)
 [![Docker Pulls](https://badgen.net/docker/pulls/lukechilds/bitcoind?icon=docker&label=Docker%20pulls)](https://hub.docker.com/r/lukechilds/bitcoind/)
 [![Docker Image Size](https://badgen.net/docker/size/lukechilds/bitcoind/latest/amd64?icon=docker&label=lukechilds/bitcoind)](https://hub.docker.com/r/lukechilds/bitcoind/tags?name=latest)
-[![tippin.me](https://badgen.net/badge/%E2%9A%A1%EF%B8%8Ftippin.me/@lukechilds/F0918E)](https://tippin.me/@lukechilds)
+[![GitHub Donate](https://badgen.net/badge/GitHub/Sponsor/D959A7?icon=github)](https://github.com/sponsors/lukechilds)
+[![Bitcoin Donate](https://badgen.net/badge/Bitcoin/Donate/F19537?icon=bitcoin)](https://blockstream.info/address/3Luke2qRn5iLj4NiFrvLBu2jaEj7JeMR6w)
+[![Lightning Donate](https://badgen.net/badge/Lightning/Donate/F6BC41?icon=bitcoin-lightning)](https://tippin.me/@lukechilds)
 
 > Run a full Bitcoin node with one command
 
