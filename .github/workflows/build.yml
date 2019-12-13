@@ -61,3 +61,7 @@ jobs:
         run: docker images bitcoind --format "{{.Tag}}" | while read -r tag; do docker tag  "bitcoind:${tag}"  "lukechilds/bitcoind:${tag}"; done
       - name: Log image data
         run: docker images lukechilds/bitcoind
+      - name: Login to Docker Hub
+        run: echo "${{secrets.DOCKER_TOKEN}}" | docker login -u=lukechilds --password-stdin
+      - name: Push to Docker Hub
+        run: docker push lukechilds/bitcoind
