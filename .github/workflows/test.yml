@@ -1,0 +1,36 @@
+name: Test
+on: push
+env:
+  DOCKER_BUILDKIT: 1
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v1
+      - name: Build bitcoind
+        run: docker build -t bitcoind .
+      - name: Log image data
+        run: docker images bitcoind
+      - name: Check bitcoind -version
+        run: docker run bitcoind -version
+      - name: Save image tarballs
+        run: mkdir -p images && docker save bitcoind | gzip > "images/bitcoind.tgz"
+      - name: Upload image tarballs
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          name: images
+          path: images/
+  cli:
+    name: Test bitcoin-cli can be called from docker exec
+    runs-on: ubuntu-18.04
+    needs: build
+    steps:
+      - name: Download image tarballs
+        uses: actions/download-artifact@v1.0.0
+        with:
+          name: images
+      - name: Load image tarballs
+        run: for image in images/*; do docker load -i $image; done
+      - name: Log image data
+        run: docker images bitcoind
