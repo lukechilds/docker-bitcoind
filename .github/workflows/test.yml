@@ -34,3 +34,9 @@ jobs:
         run: for image in images/*; do docker load -i $image; done
       - name: Log image data
         run: docker images bitcoind
+      - name: Run bitcoind
+        run: docker run --detach --name bitcoind lukechilds/bitcoind
+      - name: Run bitcoin-cli getnetworkinfo
+        run: docker exec bitcoind bitcoin-cli getnetworkinfo
+      - name: Stop bitcoind
+        run: docker exec bitcoind bitcoin-cli stop
