@@ -60,6 +60,8 @@ jobs:
       - name: Wait 10s for bitcoind to load
         run: sleep 10
       - name: Run cURL JSON-RPC getnetworkinfo
-        run: curl --data '{"jsonrpc":"1.0","id":"curltext","method":"getnetworkinfo"}' http://$(cat $HOME/.bitcoin/.cookie)@127.0.0.1:8332
+        run: |
+          cookie=$(cat $HOME/.bitcoin/.cookie)
+          curl --data '{"jsonrpc":"1.0","id":"curltext","method":"getnetworkinfo"}' "http://${cookie}@127.0.0.1:8332"
       - name: Stop bitcoind
         run: docker exec bitcoind bitcoin-cli stop
