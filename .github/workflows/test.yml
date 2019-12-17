@@ -36,6 +36,8 @@ jobs:
         run: docker images bitcoind
       - name: Run bitcoind
         run: docker run --detach --name bitcoind lukechilds/bitcoind
+      - name: Wait 10s for bitcoind to load
+        run: sleep 10
       - name: Run bitcoin-cli getnetworkinfo
         run: docker exec bitcoind bitcoin-cli getnetworkinfo
       - name: Stop bitcoind
@@ -55,6 +57,8 @@ jobs:
         run: docker images bitcoind
       - name: Run bitcoind
         run: docker run --detach --name bitcoind -v $HOME/.bitcoin:/data/.bitcoin -p 127.0.0.1:8332:8332 lukechilds/bitcoind -rpcbind=0.0.0.0 -rpcallowip=0.0.0.0/0
+      - name: Wait 10s for bitcoind to load
+        run: sleep 10
       - name: Run cURL JSON-RPC getnetworkinfo
         run: curl --data '{"jsonrpc":"1.0","id":"curltext","method":"getnetworkinfo"}' http://$(cat $HOME/.bitcoin/.cookie)@127.0.0.1:8332
       - name: Stop bitcoind
