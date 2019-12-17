@@ -40,3 +40,22 @@ jobs:
         run: docker exec bitcoind bitcoin-cli getnetworkinfo
       - name: Stop bitcoind
         run: docker exec bitcoind bitcoin-cli stop
+  rpc:
+    name: Test JSON-RPC can be called from cURL
+    runs-on: ubuntu-18.04
+    needs: build
+    steps:
+      - name: Download image tarballs
+        uses: actions/download-artifact@v1.0.0
+        with:
+          name: images
+      - name: Load image tarballs
+        run: for image in images/*; do docker load -i $image; done
+      - name: Log image data
+        run: docker images bitcoind
+      - name: Run bitcoind
+        run: docker run --detach --name bitcoind -v $HOME/.bitcoin:/data/.bitcoin -p 127.0.0.1:8332:8332 lukechilds/bitcoind -rpcbind=0.0.0.0 -rpcallowip=0.0.0.0/0
+      - name: Run cURL JSON-RPC getnetworkinfo
+        run: curl --data '{"jsonrpc":"1.0","id":"curltext","method":"getnetworkinfo"}' http://$(cat $HOME/.bitcoin/.cookie)@127.0.0.1:8332
+      - name: Stop bitcoind
+        run: docker exec bitcoind bitcoin-cli stop
