@@ -36,10 +36,16 @@ jobs:
         run: docker images bitcoind
       - name: Run bitcoind
         run: docker run --detach --name bitcoind lukechilds/bitcoind
-      - name: Wait 10s for bitcoind to load
-        run: sleep 10
       - name: Run bitcoin-cli getnetworkinfo
-        run: docker exec bitcoind bitcoin-cli getnetworkinfo
+        run: |
+          trys=0
+          while true; do
+            trys=$((trys+1))
+            docker exec bitcoind bitcoin-cli getnetworkinfo && break
+            (( trys >= 10 )) && echo "Giving up after 10 tries" && exit 1
+            echo "Trying again in 1 second..."
+            sleep 1
+          done
       - name: Stop bitcoind
         run: docker exec bitcoind bitcoin-cli stop
   rpc:
@@ -57,11 +63,27 @@ jobs:
         run: docker images bitcoind
       - name: Run bitcoind
         run: docker run --detach --name bitcoind -v $HOME/.bitcoin:/data/.bitcoin -p 127.0.0.1:8332:8332 lukechilds/bitcoind -rpcbind=0.0.0.0 -rpcallowip=0.0.0.0/0
-      - name: Wait 10s for bitcoind to load
-        run: sleep 10
       - name: Run cURL JSON-RPC getnetworkinfo
         run: |
+          echo "Waiting for bitcoind to create cookie file..."
+          trys=0
+          while [ ! -f $HOME/.bitcoin/.cookie ]; do
+            trys=$((trys+1))
+            (( trys >= 10 )) && echo "Giving up after 10 tries" && exit 1
+            echo "Trying again in 1 second..."
+            sleep 1;
+          done
           cookie=$(sudo cat $HOME/.bitcoin/.cookie)
-          curl --data '{"jsonrpc":"1.0","id":"curltext","method":"getnetworkinfo"}' "http://${cookie}@127.0.0.1:8332"
+
+          echo "Calling JSON-RPC from cURL..."
+          trys=0
+          while true; do
+            trys=$((trys+1))
+            json=$(curl --data '{"jsonrpc":"1.0","id":"curltext","method":"getnetworkinfo"}' "http://${cookie}@127.0.0.1:8332")
+            echo $json | jq --exit-status 'select(.result != null)' && break
+            (( trys >= 10 )) && echo "Giving up after 10 tries" && exit 1
+            echo "Trying again in 1 second..."
+            sleep 1
+          done
       - name: Stop bitcoind
         run: docker exec bitcoind bitcoin-cli stop
