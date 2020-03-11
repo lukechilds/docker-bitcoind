@@ -1,5 +1,5 @@
 ARG ARCH=amd64
-ARG VERSION=0.19.0.1
+ARG VERSION=0.19.1
 
 FROM $ARCH/debian:stable-slim
 LABEL maintainer="Luke Childs <lukechilds123@gmail.com>"
