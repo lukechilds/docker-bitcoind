@@ -79,7 +79,7 @@ jobs:
           trys=0
           while true; do
             trys=$((trys+1))
-            json=$(curl --data '{"jsonrpc":"1.0","id":"curltext","method":"getnetworkinfo"}' "http://${cookie}@127.0.0.1:8332")
+            json=$(curl --silent --data '{"jsonrpc":"1.0","id":"curltext","method":"getnetworkinfo"}' "http://${cookie}@127.0.0.1:8332")
             echo $json | jq --exit-status 'select(.result != null)' && break
             (( trys >= 10 )) && echo "Giving up after 10 tries" && exit 1
             echo "Trying again in 1 second..."
