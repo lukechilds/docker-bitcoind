@@ -1,0 +1,89 @@
+name: Test
+on: push
+env:
+  DOCKER_BUILDKIT: 1
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v1
+      - name: Build bitcoind
+        run: docker build -t bitcoind .
+      - name: Log image data
+        run: docker images bitcoind
+      - name: Check bitcoind -version
+        run: docker run bitcoind -version
+      - name: Save image tarballs
+        run: mkdir -p images && docker save bitcoind | gzip > "images/bitcoind.tgz"
+      - name: Upload image tarballs
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          name: images
+          path: images/
+  cli:
+    name: Test bitcoin-cli can be called from docker exec
+    runs-on: ubuntu-18.04
+    needs: build
+    steps:
+      - name: Download image tarballs
+        uses: actions/download-artifact@v1.0.0
+        with:
+          name: images
+      - name: Load image tarballs
+        run: for image in images/*; do docker load -i $image; done
+      - name: Log image data
+        run: docker images bitcoind
+      - name: Run bitcoind
+        run: docker run --detach --name bitcoind lukechilds/bitcoind
+      - name: Run bitcoin-cli getnetworkinfo
+        run: |
+          trys=0
+          while true; do
+            trys=$((trys+1))
+            docker exec bitcoind bitcoin-cli getnetworkinfo && break
+            (( trys >= 10 )) && echo "Giving up after 10 tries" && exit 1
+            echo "Trying again in 1 second..."
+            sleep 1
+          done
+      - name: Stop bitcoind
+        run: docker exec bitcoind bitcoin-cli stop
+  rpc:
+    name: Test JSON-RPC can be called from cURL
+    runs-on: ubuntu-18.04
+    needs: build
+    steps:
+      - name: Download image tarballs
+        uses: actions/download-artifact@v1.0.0
+        with:
+          name: images
+      - name: Load image tarballs
+        run: for image in images/*; do docker load -i $image; done
+      - name: Log image data
+        run: docker images bitcoind
+      - name: Run bitcoind
+        run: docker run --detach --name bitcoind -v $HOME/.bitcoin:/data/.bitcoin -p 127.0.0.1:8332:8332 lukechilds/bitcoind -rpcbind=0.0.0.0 -rpcallowip=0.0.0.0/0
+      - name: Run cURL JSON-RPC getnetworkinfo
+        run: |
+          echo "Waiting for bitcoind to create cookie file..."
+          trys=0
+          while [ ! -f $HOME/.bitcoin/.cookie ]; do
+            trys=$((trys+1))
+            (( trys >= 10 )) && echo "Giving up after 10 tries" && exit 1
+            echo "Trying again in 1 second..."
+            sleep 1;
+          done
+          cookie=$(sudo cat $HOME/.bitcoin/.cookie)
+
+          echo "Calling JSON-RPC from cURL..."
+          trys=0
+          while true; do
+            trys=$((trys+1))
+            json=$(curl --silent --data '{"jsonrpc":"1.0","id":"curltext","method":"getnetworkinfo"}' "http://${cookie}@127.0.0.1:8332")
+            echo $json | jq --exit-status 'select(.result != null)' && break
+            (( trys >= 10 )) && echo "Giving up after 10 tries" && exit 1
+            echo "Trying again in 1 second..."
+            sleep 1
+          done
+      - name: Stop bitcoind
+        run: docker exec bitcoind bitcoin-cli stop

@@ -1,5 +1,8 @@
 name: Docker CI
-on: push
+on:
+  push:
+    branches:
+      - never
 env:
   DOCKER_BUILDKIT: 1
   LATEST_TAG: 0.19.1
