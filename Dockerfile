@@ -1,4 +1,3 @@
-ARG ARCH="amd64"
 ARG VERSION="0.19.1"
 
 ARG LEGACY_BITCOIN_CORE_RELEASE_KEY="01EA5486DE18A882D4C2684590C8019E36C2E964"
@@ -12,34 +11,53 @@ ARG PIETER_WUILLE="133EAC179436F14A5CF1B794860FEB804E669320"
 ARG SJORS_PROVOOST="ED9BDF7AD6A55E232E84524257FF9BDBCC301009"
 ARG KEYS="${LEGACY_BITCOIN_CORE_RELEASE_KEY} ${ANDREW_CHOW} ${JON_ATACK} ${JONAS_SCHNELLI} ${MATT_CORALLO} ${LUKE_DASHJR} ${PETER_TODD} ${PIETER_WUILLE} ${SJORS_PROVOOST}"
 
-FROM $ARCH/debian:stable-slim
+# Build stage
+FROM --platform=$BUILDPLATFORM debian:stable-slim as builder
 LABEL maintainer="Luke Childs <lukechilds123@gmail.com>"
+
+ARG TARGETARCH
 
 ARG ARCH
 ARG VERSION
 ARG KEYS
 
-RUN cd /tmp && \
-    if [ "${ARCH}" = "amd64" ]; then TARBALL_ARCH=x86_64-linux-gnu; fi && \
-    if [ "${ARCH}" = "arm64v8" ]; then TARBALL_ARCH=aarch64-linux-gnu; fi && \
-    if [ "${ARCH}" = "arm32v7" ]; then TARBALL_ARCH=arm-linux-gnueabihf; fi && \
-    TARBALL="bitcoin-${VERSION}-${TARBALL_ARCH}.tar.gz" && \
-    apt-get update && \
-    apt-get install -y wget gpg && \
-    wget https://bitcoincore.org/bin/bitcoin-core-${VERSION}/${TARBALL} && \
-    # This file only exists after v22
-    wget https://bitcoincore.org/bin/bitcoin-core-${VERSION}/SHA256SUMS || true && \
-    wget https://bitcoincore.org/bin/bitcoin-core-${VERSION}/SHA256SUMS.asc && \
-    gpg --keyserver keyserver.ubuntu.com --recv-keys $KEYS && \
-    gpg --verify SHA256SUMS.asc 2>&1 >/dev/null | grep "^gpg: Good signature from" || { echo "No valid signature"; exit 1; } && \
-    if [ -f SHA256SUMS ]; then CHECKSUM_FILE="SHA256SUMS"; else CHECKSUM_FILE="SHA256SUMS.asc"; fi && \
-    grep $TARBALL $CHECKSUM_FILE | sha256sum -c && \
-    # sha256sum -c --ignore-missing "${CHECKSUM_FILE}" \
-    tar -zxvf $TARBALL --strip-components=1 && \
-    mv bin/bitcoind /usr/local/bin/ && \
-    mv bin/bitcoin-cli /usr/local/bin/ && \
-    apt-get purge -y wget gpg && \
-    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+WORKDIR /build
+
+RUN echo "Installing build deps"
+RUN apt-get update
+RUN apt-get install -y wget pgp
+
+RUN echo "Deriving tarball name from \$TARGETARCH"
+RUN [ "${TARGETARCH}" = "amd64" ] && echo "bitcoin-${VERSION}-x86_64-linux-gnu.tar.gz"    > /tarball-name || true
+RUN [ "${TARGETARCH}" = "arm64" ] && echo "bitcoin-${VERSION}-aarch64-linux-gnu.tar.gz"   > /tarball-name || true
+RUN [ "${TARGETARCH}" = "arm" ]   && echo "bitcoin-${VERSION}-arm-linux-gnueabihf.tar.gz" > /tarball-name || true
+RUN echo "Tarball name: $(cat /tarball-name)"
+
+RUN echo "Downloading release assets"
+RUN wget https://bitcoincore.org/bin/bitcoin-core-${VERSION}/$(cat /tarball-name)
+RUN wget https://bitcoincore.org/bin/bitcoin-core-${VERSION}/SHA256SUMS.asc
+# This file only exists after v22 so allow it to fail
+RUN wget https://bitcoincore.org/bin/bitcoin-core-${VERSION}/SHA256SUMS || true
+RUN echo "Downloaded release assets:" && ls
+
+RUN echo "Verifying PGP signatures"
+RUN gpg --keyserver keyserver.ubuntu.com --recv-keys $KEYS
+RUN gpg --verify SHA256SUMS.asc 2>&1 >/dev/null | grep "^gpg: Good signature from" || { echo "No valid signature"; exit 1; }
+RUN echo "PGP signature verification passed"
+
+RUN echo "Verifying checksums"
+RUN [ -f SHA256SUMS ] && cp SHA256SUMS /sha256sums || cp SHA256SUMS.asc /sha256sums
+RUN grep $(cat /tarball-name) /sha256sums | sha256sum -c
+RUN echo "Chucksums verified ok"
+
+RUN echo "Extracting release assets"
+RUN tar -zxvf $(cat /tarball-name) --strip-components=1
+
+# Final image
+FROM debian:stable-slim
+
+COPY --from=builder /build/bin/bitcoind /bin
+COPY --from=builder /build/bin/bitcoin-cli /bin
 
 ENV HOME /data
 VOLUME /data/.bitcoin
