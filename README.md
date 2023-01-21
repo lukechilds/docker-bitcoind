@@ -1,6 +1,5 @@
 # docker-bitcoind
 
-[![Actions Status](https://badgen.net/github/checks/lukechilds/docker-bitcoind?icon=github&label=Build%20Status)](https://github.com/lukechilds/docker-bitcoind/actions)
 [![Docker Pulls](https://badgen.net/docker/pulls/lukechilds/bitcoind?icon=docker&label=Docker%20pulls)](https://hub.docker.com/r/lukechilds/bitcoind/)
 [![Docker Image Size](https://badgen.net/docker/size/lukechilds/bitcoind/latest/amd64?icon=docker&label=lukechilds/bitcoind)](https://hub.docker.com/r/lukechilds/bitcoind/tags?name=latest)
 [![GitHub Donate](https://badgen.net/badge/GitHub/Sponsor/D959A7?icon=github)](https://github.com/sponsors/lukechilds)
