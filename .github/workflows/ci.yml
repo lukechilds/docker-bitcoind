@@ -55,3 +55,12 @@ jobs:
             --build-arg VERSION=${{matrix.version}} \
             --tag ${{ secrets.DOCKER_USERNAME }}/bitcoind:v${{matrix.version}} \
             --push .
+
+      - name: Rebuild for latest tag
+        if: matrix.version == env.LATEST_TAG
+        run: |
+          docker buildx build \
+            --platform linux/amd64,linux/arm64,linux/arm/v7 \
+            --build-arg VERSION=${{matrix.version}} \
+            --tag ${{ secrets.DOCKER_USERNAME }}/bitcoind:latest \
+            --push .
