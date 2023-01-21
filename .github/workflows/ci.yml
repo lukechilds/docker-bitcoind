@@ -2,7 +2,7 @@ name: Docker CI
 on: push
 env:
   DOCKER_BUILDKIT: 1
-  LATEST_TAG: 0.19.1
+  LATEST_TAG: 24.0.1
 jobs:
   build:
     name: Build
@@ -15,6 +15,17 @@ jobs:
           - arm64v8
           - arm32v7
         version:
+          - 24.0.1
+          - 23.1
+          - 23.0
+          - 22.1
+          - 22.0
+          - 0.21.2
+          - 0.21.1
+          - 0.21.0
+          - 0.20.2
+          - 0.20.1
+          - 0.20.0
           - 0.19.1
           - 0.19.0.1
           - 0.18.1
